@@ -87,7 +87,7 @@ namespace Championship_Riven
                     var Minions = EntityManager.MinionsAndMonsters.GetLaneMinions(EntityManager.UnitTeam.Enemy, Player.Instance.Position, Q.Range + 1000);
                     foreach (var Minion in Minions)
                     {
-                        if(Minion.IsValidTarget(250) && !Minion.IsDead && Minion == args.Target )
+                        if(Minion.IsValidTarget(200) && !Minion.IsDead && Minion == args.Target )
                         {
                             if(Q.IsReady())
                             {
@@ -102,7 +102,7 @@ namespace Championship_Riven
                         
                             else if(W.IsReady())
                             {
-                                if(Minion.Health > Player.Instance.TotalAttackDamage && Minion.Health - sender.TotalAttackDamage <= 0)
+                                if(Minion.Health > Player.Instance.TotalAttackDamage && Minion.Health - sender.TotalAttackDamage * 1.2 <= 0)
                                 {
                                     Player.IssueOrder(GameObjectOrder.AttackUnit, Minion);
                                     Core.DelayAction( () => Player.CastSpell(SpellSlot.W), 291);
@@ -112,7 +112,7 @@ namespace Championship_Riven
                             }
                             else if(E.IsReady())
                             {
-                                if(Minion.Health > Player.Instance.TotalAttackDamage && Minion.Health - sender.TotalAttackDamage <= 0)
+                                if(Minion.Health > Player.Instance.TotalAttackDamage && Minion.Health - sender.TotalAttackDamage 8 1.2 <= 0)
                                 {
                                     E.Cast(Player.Instance.Position.Extend(Minion.ServerPosition, 200).To3D());
                                     Player.IssueOrder(GameObjectOrder.AttackUnit, Minion);
@@ -125,7 +125,7 @@ namespace Championship_Riven
                         }
                         else if(Minion.IsValidTarget(400) && !Minion.IsDead && Minion == args.Target )
                         {
-                            if(Minion.Health > Player.Instance.TotalAttackDamage && Minion.Health - sender.TotalAttackDamage <= 0)
+                            if(Minion.Health > Player.Instance.TotalAttackDamage && Minion.Health - sender.TotalAttackDamage * 1.2 <= 0)
                                 {
                                     E.Cast(Player.Instance.Position.Extend(Minion.ServerPosition, 200).To3D());
                                     Player.IssueOrder(GameObjectOrder.AttackUnit, Minion);
