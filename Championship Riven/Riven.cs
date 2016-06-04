@@ -116,7 +116,7 @@ namespace Championship_Riven
                                 {
                                     E.Cast(Player.Instance.Position.Extend(Minion.ServerPosition, 200).To3D());
                                     Player.IssueOrder(GameObjectOrder.AttackUnit, Minion);
-                                    Core.DelayAction( () => Player.CastSpell(SpellSlot.Q), 291);
+                                    Core.DelayAction( () => Player.CastSpell(SpellSlot.Q), 400);
                                     Chat.Print("Last Hitting With e-Q-AA");
                                     return;
                                 } 
