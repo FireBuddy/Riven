@@ -91,7 +91,7 @@ namespace Championship_Riven
                         {
                             if(Q.IsReady())
                             {
-                                if(Minion.Health > Player.Instance.TotalAttackDamage && Minion.Health - 1.2 sender.TotalAttackDamage <= 0)
+                                if(Minion.Health > Player.Instance.TotalAttackDamage && Minion.Health - sender.TotalAttackDamage * 1.2 <= 0)
                                 {
                                     Player.IssueOrder(GameObjectOrder.AttackUnit, Minion);
                                     Core.DelayAction( () => Player.CastSpell(SpellSlot.Q), 291);
