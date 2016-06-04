@@ -71,75 +71,60 @@ namespace Championship_Riven
             Gapcloser.OnGapcloser += Gapcloser_OnGapcloser;
             Obj_AI_Base.OnPlayAnimation += Obj_AI_Base_OnPlayAnimation;
             Obj_AI_Base.OnProcessSpellCast += Obj_AI_Base_OnProcessSpellCast;
-            Obj_AI_Turret.OnBasicAttack += Obj_AI_Turret_OnBasicAttack;
+            
+            Obj_AI_Turret.OnBasicAttack += Obj_AI_Turret_OnBasicAttack2;
             Orbwalker.OnPostAttack += Orbwalker_OnPostAttack;
             Orbwalker.OnPreAttack += BeforeAttack;
             Drawing.OnDraw += Drawing_OnDraw;
         }
-
-        public static void Obj_AI_Turret_OnBasicAttack(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
+         public static void Obj_AI_Turret_OnBasicAttack2(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
         {
-            if ((Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.LastHit)||Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.LaneClear)) && sender is Obj_AI_Turret && sender.Distance(Player.Instance) < 2000 && sender.IsAlly)
+            if (sender is Obj_AI_Turret && sender.Distance(Player.Instance) < 800 && sender.IsAlly)
             {
-                
-                if (!(args.Target is AIHeroClient))
+                if (!(args.Target is AIHeroClient) && args.Target != null)
                 {
+                    
                     var Minions = EntityManager.MinionsAndMonsters.GetLaneMinions(EntityManager.UnitTeam.Enemy, Player.Instance.Position, 450);
                     foreach (var Minion in Minions)
-                    if(Minion.Health > Player.Instance.TotalAttackDamage && Minion.Health - sender.TotalAttackDamage * 1 <= 0)
                     
+                    if (Minion != null && Prediction.Health.GetPrediction(Minion, 1) > Player.Instance.TotalAttackDamage && Prediction.Health.GetPrediction(Minion, 1) - sender.TotalAttackDamage * 1.1  <= 0 )
+                     
                     {
-                        if(Minion.IsValidTarget(125) && !Minion.IsDead && Minion == args.Target )
+                        
+                        if( Minion.IsValidTarget(Player.Instance.GetAutoAttackRange(Minion)) && Orbwalker.CanAutoAttack && Minion == args.Target)
                         {
-                            if(Q.IsReady() && CountQ < 2)
+                            if(Q.IsReady() && CountQ <= 2)
                             {
-                                if(Minion.Health > Player.Instance.TotalAttackDamage && Minion.Health - sender.TotalAttackDamage * 1 <= 0)
+                                
                                 {
+                                    
                                     Player.IssueOrder(GameObjectOrder.AttackUnit, Minion);
-                                    Core.DelayAction( () => Player.CastSpell(SpellSlot.Q), 291);
+                                    Core.DelayAction( () => Player.CastSpell(SpellSlot.Q), 200);
                                     Chat.Print("Last Hitting With AA-Q");
-                                    return;
+                                    
                                 }
                             }
                         
                             else if(W.IsReady())
                             {
-                                if(Minion.Health > Player.Instance.TotalAttackDamage && Minion.Health - sender.TotalAttackDamage * 1 <= 0)
+                                
                                 {
-                                    Player.IssueOrder(GameObjectOrder.AttackUnit, Minion);
-                                    Core.DelayAction( () => Player.CastSpell(SpellSlot.W), 291);
-                                    Chat.Print("Last Hitting With AA-W");
-                                    return;
-                                } 
-                            }
-                            else if(E.IsReady())
-                            {
-                                if(Minion.Health > Player.Instance.TotalAttackDamage && Minion.Health - sender.TotalAttackDamage * 1 <= 0)
-                                {
-                                    E.Cast(Player.Instance.Position.Extend(Minion.ServerPosition, 200).To3D());
-                                    Player.IssueOrder(GameObjectOrder.AttackUnit, Minion);
                                     
-                                    Chat.Print("Last Hitting With e-AA");
-                                    return;
+                                    Player.IssueOrder(GameObjectOrder.AttackUnit, Minion);
+                                    Core.DelayAction( () => Player.CastSpell(SpellSlot.W), 300);
+                                    Chat.Print("Last Hitting With AA-W");
+                                    
                                 } 
                             }
+
                             
                         }
-                        else if(E.IsReady() && Minion.IsValidTarget(400) && !Minion.IsDead && Minion == args.Target )
-                        {
-                            if(Minion.Health > Player.Instance.TotalAttackDamage && Minion.Health - sender.TotalAttackDamage * 1 <= 0)
-                                {
-                                    E.Cast(Player.Instance.Position.Extend(Minion.ServerPosition, 200).To3D());
-                                    Player.IssueOrder(GameObjectOrder.AttackUnit, Minion);
-                                   
-                                    Chat.Print("Last Hitting With E-AA");
-                                    return;
-                                } 
-                        }
+
                     }
                 }
             }
-        }    
+        }   
+        
         
         private static void Drawing_OnDraw(EventArgs args)
         {
@@ -706,25 +691,6 @@ namespace Championship_Riven
 
         private static void Laneclear()
         {
-        {
-            var Minion = EntityManager.MinionsAndMonsters.EnemyMinions.Where(x => x.IsValid && !x.IsDead && x.IsValidTarget(W.Range)).OrderByDescending(x => x.MaxHealth);
-            var Minions = EntityManager.MinionsAndMonsters.GetCircularFarmLocation(Minion, Q.Range, (int)Q.Range);
-
-            if (Minion == null)
-                return;
-
-            if(RivenMenu.CheckBox(RivenMenu.Laneclear, "UseWLane"))
-            {
-                if (Minions.HitNumber >= RivenMenu.Slider(RivenMenu.Laneclear, "UseWLaneMin"))
-                {
-                    W.Cast();
-                }
-            }
-        }
-
-        }
-        private static void LastHit()
-        {
             var Minions = EntityManager.MinionsAndMonsters.GetLaneMinions(EntityManager.UnitTeam.Enemy, Player.Instance.Position, Q.Range * 2 + 125);
             
             foreach (var Minion in Minions)
@@ -749,6 +715,82 @@ namespace Championship_Riven
                 }      
             }
         }  
+
+        
+        private static void LastHit()
+        {
+        {
+                var tawah = EntityManager.Turrets.Allies.FirstOrDefault
+                (t => !t.IsDead && t.IsInRange(Player.Instance, 800));
+                var Minions = EntityManager.MinionsAndMonsters.GetLaneMinions(EntityManager.UnitTeam.Enemy, Player.Instance.Position, 450);
+                foreach (var Minion in Minions)
+                {    
+                    if (tawah != null && ObjectManager.Player.Position.Distance(tawah.ServerPosition) > 500 && Minion != null && Prediction.Health.GetPrediction(Minion, 50) > Player.Instance.TotalAttackDamage && Prediction.Health.GetPrediction(Minion, 50) - Player.Instance.TotalAttackDamage - SpellQDamage(Minion, Minion.Health)  <= 0 )
+                     
+                    {
+                        
+                        if( Minion.IsValidTarget(Player.Instance.GetAutoAttackRange(Minion)) && Orbwalker.CanAutoAttack)
+                        {
+                            if(Q.IsReady() && CountQ <= 2)
+                            {
+                                
+                                {
+                                    
+                                    Player.IssueOrder(GameObjectOrder.AttackUnit, Minion);
+                                    Core.DelayAction( () => Player.CastSpell(SpellSlot.Q), 200);
+                                    Chat.Print("Last Hitting With AA-Q");
+                                    
+                                }
+                            }
+                        
+                            else if(W.IsReady())
+                            {
+                                
+                                {
+                                    
+                                    Player.IssueOrder(GameObjectOrder.AttackUnit, Minion);
+                                    Core.DelayAction( () => Player.CastSpell(SpellSlot.W), 300);
+                                    Chat.Print("Last Hitting With AA-W");
+                                    
+                                } 
+                            }
+
+                            
+                        }
+
+                    }
+                }
+        }
+        
+        {
+            var mawah = EntityManager.Heroes.Enemies.FirstOrDefault
+            (y => !y.IsDead && y.IsInRange(Player.Instance, 800));
+            var tawah2 = EntityManager.Turrets.Allies.FirstOrDefault
+            (t => !t.IsDead && t.IsInRange(Player.Instance, 800));
+            var Minions2 = EntityManager.MinionsAndMonsters.GetLaneMinions(EntityManager.UnitTeam.Enemy, Player.Instance.Position, Q.Range * 2 + 125);
+            
+            foreach (var Minion2 in Minions2)
+            {
+
+                if(tawah2 == null && Q.IsReady() && ObjectManager.Player.Position.Distance(Minion2.ServerPosition) < ObjectManager.Player.Position.Distance(mawah.ServerPosition))
+                {
+                    if(Minion2.IsValidTarget(Q.Range * 2 + 125) && !Minion2.IsDead )
+                    {
+
+                        if(Player.Instance.IsFacing(Minion2) && ObjectManager.Player.Position.Distance(Minion2.ServerPosition) > 409 && Minion2.Health - Player.Instance.TotalAttackDamage * 1.2 <= 0)
+                        {
+                           
+                            Q.Cast(Player.Instance.Position.Extend(Minion2.ServerPosition, 200).To3D());
+                        }
+                        
+                    }
+                }
+
+            }
+        }
+        }
+       
+
         
         private static void Jungleclear()
         {
@@ -1039,18 +1081,24 @@ namespace Championship_Riven
                 LastCastW = Environment.TickCount;
                 return;
             }
+            
+            var minions = EntityManager.MinionsAndMonsters.GetLaneMinions(EntityManager.UnitTeam.Enemy, Player.Instance.Position, Q.Range + 126).Where(minion => minion != null && !minion.IsDead).ToList();
             if (args.SData.Name.ToLower().Contains(Riven.Q.Name.ToLower()))
             {
                 LastCastQ = Environment.TickCount;
                 
                 Core.DelayAction(() =>
                 {
-                    if (!Player.Instance.IsRecalling() && CountQ <= 2)
+                    if (!Player.Instance.IsRecalling() && CountQ <= 2 && minions.Count == 0)
                     {
                         Player.CastSpell(SpellSlot.Q,
                             Orbwalker.LastTarget != null && Orbwalker.LastAutoAttack - Environment.TickCount < 3000
                                 ? Orbwalker.LastTarget.Position
                                 : Game.CursorPos);
+                    }
+                    else
+                    {
+                      CountQ = 0;
                     }
                 }, 3480);
                 return;
