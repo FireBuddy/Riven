@@ -96,6 +96,7 @@ namespace Championship_Riven
                                     Player.IssueOrder(GameObjectOrder.AttackUnit, Minion);
                                     Core.DelayAction( () => Player.CastSpell(SpellSlot.Q), 291);
                                     Chat.Print("Last Hitting With AA-Q");
+                                    return;
                                 }
                             }
                         
@@ -106,6 +107,7 @@ namespace Championship_Riven
                                     Player.IssueOrder(GameObjectOrder.AttackUnit, Minion);
                                     Core.DelayAction( () => Player.CastSpell(SpellSlot.W), 291);
                                     Chat.Print("Last Hitting With AA-W");
+                                    return;
                                 } 
                             }
                             else if(E.IsReady())
@@ -115,7 +117,8 @@ namespace Championship_Riven
                                     E.Cast(Player.Instance.Position.Extend(Minion.ServerPosition, 200).To3D());
                                     Player.IssueOrder(GameObjectOrder.AttackUnit, Minion);
                                     Core.DelayAction( () => Player.CastSpell(SpellSlot.Q), 291);
-                                    Chat.Print("Last Hitting With AA-E-Q");
+                                    Chat.Print("Last Hitting With e-Q-AA");
+                                    return;
                                 } 
                             }
                             
@@ -127,7 +130,8 @@ namespace Championship_Riven
                                     E.Cast(Player.Instance.Position.Extend(Minion.ServerPosition, 200).To3D());
                                     Player.IssueOrder(GameObjectOrder.AttackUnit, Minion);
                                     Core.DelayAction( () => Player.CastSpell(SpellSlot.Q), 291);
-                                    Chat.Print("Last Hitting With AA-E-Q");
+                                    Chat.Print("Last Hitting With E-AA-Q");
+                                    return;
                                 } 
                         }
                     }
