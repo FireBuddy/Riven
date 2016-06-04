@@ -123,7 +123,7 @@ namespace Championship_Riven
                             }
                             
                         }
-                        else if(Minion.IsValidTarget(400) && !Minion.IsDead && Minion == args.Target )
+                        else if(E.IsReady() && Minion.IsValidTarget(400) && !Minion.IsDead && Minion == args.Target )
                         {
                             if(Minion.Health > Player.Instance.TotalAttackDamage && Minion.Health - sender.TotalAttackDamage * 1.2 <= 0)
                                 {
