@@ -691,29 +691,7 @@ namespace Championship_Riven
 
         private static void Laneclear()
         {
-            var Minions = EntityManager.MinionsAndMonsters.GetLaneMinions(EntityManager.UnitTeam.Enemy, Player.Instance.Position, Q.Range * 2 + 125);
-            
-            foreach (var Minion in Minions)
-            {
-
-                if(Q.IsReady())
-                {
-                    if(Minion.IsValidTarget(Q.Range * 2 + 125) && !Minion.IsDead )
-                    {
-
-                        if(Player.Instance.IsFacing(Minion) && ObjectManager.Player.Position.Distance(Minion.ServerPosition) > 409 && Minion.Health - Player.Instance.TotalAttackDamage * 1.2 <= 0)
-                        {
-                           
-                            Q.Cast(Player.Instance.Position.Extend(Minion.ServerPosition, 200).To3D());
-                        }
-                        
-                    }
-                }
-                else if(E.IsReady() && CountQ > 1 && Minion.IsValidTarget(E.Range + 125) && ObjectManager.Player.Position.Distance(Minion.ServerPosition) > 300  && Minion.Health - SpellQDamage(Minion, Minion.Health) * 2 <= 0 )
-                {
-                      E.Cast(Player.Instance.Position.Extend(Minion.ServerPosition, 200).To3D());
-                }      
-            }
+ 
         }  
 
         
