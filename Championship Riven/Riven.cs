@@ -600,7 +600,7 @@ namespace Championship_Riven
                 
                 if (CountQ == 2 && Q.IsReady())
                 {
-                    if (Player.Instance.IsFacing(Target) && Target.IsValidTarget(450) && Target.CanMove && !Player.HasBuff("Valor"))
+                    if (Player.Instance.IsFacing(Target) && Target.IsValidTarget(450) && ObjectManager.Player.Position.Distance(Target.ServerPosition) > 400 && Target.CanMove && !Player.HasBuff("Valor"))
                     {
                         Player.CastSpell(SpellSlot.Q, Target.Position);
                     }
