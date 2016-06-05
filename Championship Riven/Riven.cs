@@ -523,9 +523,9 @@ namespace Championship_Riven
 
                     if (Target.IsValidTarget(R2.Range))
                     {
-                        if (RDamage(Target,Target.Health) * 0.80 >= Target.Health)
+                        if (RDamage(Target,Target.Health) * 0.95 >= Target.Health)
                         {
-                            var RPred = R2.GetPrediction(FocusTarget);
+                            var RPred = R2.GetPrediction(Target);
 
                             if (RPred.HitChance >= HitChance.High)
                             {
@@ -538,9 +538,9 @@ namespace Championship_Riven
 
                 case 1:
 
-                    if (FocusTarget.IsValidTarget(R2.Range))
+                    if (Target.IsValidTarget(R2.Range))
                     {
-                        var RPred = R2.GetPrediction(FocusTarget);
+                        var RPred = R2.GetPrediction(Target);
 
                         if(RPred.HitChance >= HitChance.High)
                         {
