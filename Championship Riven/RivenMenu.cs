@@ -29,12 +29,12 @@ namespace Championship_Riven
             Combo.Add("W/Auto", new Slider("Auto W if {0} Enemies <=", 2, 1, 5));
             Combo.AddSeparator(3);
             Combo.AddLabel("• Spell R");
-            Combo.Add("UseRType", new ComboBox("Use R when", 1, "Normal Kill", "Hard Kill", "Always", "ForceR"));
-            Combo.Add("ForceR", new KeyBind("Force R", false, KeyBind.BindTypes.PressToggle, 'U'));
+            Combo.Add("UseRType", new ComboBox("Use R when", 1, "Target less than 40 % HP", "DamageIndicator greater than 100 %", "Always", "On Keypress"));
+            Combo.Add("ForceR", new KeyBind("R On Keypress Key", false, KeyBind.BindTypes.PressToggle, 'U'));
             Combo.Add("DontR1", new Slider("Dont R if Target HP {0}% <=", 25, 10, 50));
             Combo.AddSeparator(3);
             Combo.AddLabel("• Spell R2");
-            Combo.Add("UseR2Type", new ComboBox("Use R2 when", 0, "Kill only", "Max damage"));
+            Combo.Add("UseR2Type", new ComboBox("Use R2 when", 0, "Kill only", "Max damage when target less than 25 %"));
 
             Shield = Principal.AddSubMenu("Shield", "Shield");
             Shield.AddLabel("• Spell E");
