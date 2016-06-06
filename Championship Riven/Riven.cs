@@ -77,48 +77,51 @@ namespace Championship_Riven
             Orbwalker.OnPreAttack += BeforeAttack;
             Drawing.OnDraw += Drawing_OnDraw;
         }
-         public static void Obj_AI_Turret_OnBasicAttack2(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
+        public static void Obj_AI_Turret_OnBasicAttack2(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
         {
             if (sender is Obj_AI_Turret && sender.Distance(Player.Instance) < 800 && sender.IsAlly)
             {
                 if (!(args.Target is AIHeroClient) && args.Target != null)
                 {
+                Chat.Print("sender detected");
                     
-                    var Minions = EntityManager.MinionsAndMonsters.GetLaneMinions(EntityManager.UnitTeam.Enemy, Player.Instance.Position, 450);
+                   
+                    var Minions = EntityManager.MinionsAndMonsters.GetLaneMinions(EntityManager.UnitTeam.Enemy, Player.Instance.Position, 150);
                     foreach (var Minion in Minions)
                     
-                    if (Minion != null && Prediction.Health.GetPrediction(Minion, 1) > Player.Instance.TotalAttackDamage && Prediction.Health.GetPrediction(Minion, 1) - sender.TotalAttackDamage * 1.1  <= 0 )
-                     
+                    if (Minion != null && args.Target == Minion && Orbwalker.CanAutoAttack)
+                    
                     {
+                         var AMinions = EntityManager.MinionsAndMonsters.GetLaneMinions(EntityManager.UnitTeam.Ally, Minion.Position, 300).ToList();
+                        Chat.Print("The target is : " + (Prediction.Health.GetPrediction(Minion, 930 * (int)(Minion.Distance(sender.Position)/750)) + (int)(AMinions.Count * -2)) );
                         
-                        if( Minion.IsValidTarget(Player.Instance.GetAutoAttackRange(Minion)) && Orbwalker.CanAutoAttack && Minion == args.Target)
-                        {
-                            if(Q.IsReady() && CountQ <= 2)
-                            {
-                                
-                                {
+ 
+				if(Q.IsReady() && Prediction.Health.GetPrediction(Minion, 930 * (int)(Minion.Distance(sender.Position)/750)) > Player.Instance.TotalAttackDamage &&  Prediction.Health.GetPrediction(Minion, 930 * (int)(Minion.Distance(sender.Position)/750)) + (int)(AMinions.Count * -2) <= sender.TotalAttackDamage * 1.25)
+				 {   
+				    
+				    Orbwalker.DisableMovement = true;
+				    Core.DelayAction( () => Player.IssueOrder(GameObjectOrder.AttackUnit, args.Target),0);
+                                    Core.DelayAction( () => Q.Cast(Minion.ServerPosition),291);
+                                    Core.DelayAction( () => Orbwalker.DisableMovement = false,300);
                                     
-                                    Player.IssueOrder(GameObjectOrder.AttackUnit, Minion);
-                                    Core.DelayAction( () => Player.CastSpell(SpellSlot.Q), 200);
                                     Chat.Print("Last Hitting With AA-Q");
+				 }
+				 else if(W.IsReady() && Prediction.Health.GetPrediction(Minion, 940 * (int)(Minion.Distance(sender.Position)/750)) > Player.Instance.TotalAttackDamage &&  Prediction.Health.GetPrediction(Minion, 940 * (int)(Minion.Distance(sender.Position)/750)) + (int)(AMinions.Count * -2) <= sender.TotalAttackDamage * 1.25)
+				 {   
+				    
+				    Orbwalker.DisableMovement = true;
+				    Core.DelayAction( () => Player.IssueOrder(GameObjectOrder.AttackUnit, args.Target),0);
+                                    Core.DelayAction( () => W.Cast(Minion.ServerPosition),291);
+                                    Core.DelayAction( () => Orbwalker.DisableMovement = false,300);
                                     
-                                }
-                            }
-                        
-                            else if(W.IsReady())
-                            {
-                                
-                                {
+                                    Chat.Print("Last Hitting With AA-w");
+				 }
                                     
-                                    Player.IssueOrder(GameObjectOrder.AttackUnit, Minion);
-                                    Core.DelayAction( () => Player.CastSpell(SpellSlot.W), 300);
-                                    Chat.Print("Last Hitting With AA-W");
-                                    
-                                } 
-                            }
+ 
 
-                            
-                        }
+
+
+
 
                     }
                 }
