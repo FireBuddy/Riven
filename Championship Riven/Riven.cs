@@ -83,7 +83,7 @@ namespace Championship_Riven
             {
                 if (!(args.Target is AIHeroClient) && args.Target != null)
                 {
-                Chat.Print("sender detected");
+                
                     
                    
                     var Minions = EntityManager.MinionsAndMonsters.GetLaneMinions(EntityManager.UnitTeam.Enemy, Player.Instance.Position, 150);
@@ -93,7 +93,7 @@ namespace Championship_Riven
                     
                     {
                          var AMinions = EntityManager.MinionsAndMonsters.GetLaneMinions(EntityManager.UnitTeam.Ally, Minion.Position, 300).ToList();
-                        Chat.Print("The target is : " + (Prediction.Health.GetPrediction(Minion, 930 * (int)(Minion.Distance(sender.Position)/750)) + (int)(AMinions.Count * -2)) );
+                       
                         
  
 				if(Q.IsReady() && Prediction.Health.GetPrediction(Minion, 930 * (int)(Minion.Distance(sender.Position)/750)) > Player.Instance.TotalAttackDamage &&  Prediction.Health.GetPrediction(Minion, 930 * (int)(Minion.Distance(sender.Position)/750)) + (int)(AMinions.Count * -2) <= sender.TotalAttackDamage * 1.25)
